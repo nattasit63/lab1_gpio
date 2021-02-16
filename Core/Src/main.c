@@ -92,10 +92,11 @@ int main(void)
    uint32_t blink=1000;
    uint32_t timestamp=0;
    uint8_t s[2]={0};
+   uint8_t s1[2]={0};
    uint8_t n=0;
    uint32_t timesampling=0;
     enum{
-  	f05 =1000,f1=500,f2=250,f3=167,samplingtime=100
+  	f05 =1000,f1=500,f2=250,f3=1000/6,samplingtime=100
     };
   /* USER CODE END 2 */
 
@@ -107,6 +108,7 @@ int main(void)
 		  timesampling=HAL_GetTick();
 
 	  s[1]=HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_10);
+
 
 	  if (s[1]== GPIO_PIN_RESET && s[0]==GPIO_PIN_SET)
 	  	  {
@@ -139,6 +141,21 @@ int main(void)
 	  			  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, GPIO_PIN_SET);
 	  		  }
 	  	  }
+
+
+
+	  	s1[1]=HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_3);
+	  	 if (s1[1]== GPIO_PIN_RESET && s1[0]==GPIO_PIN_SET)
+	  	{
+	  		 n=n+1;
+	  		 if (n%2==0){
+	  			 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_SET);
+	  		 }
+	  		 else{
+	  			 HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_RESET);
+	  		}
+	  	}
+	  	s1[0]=s1[1];
 
 
 
