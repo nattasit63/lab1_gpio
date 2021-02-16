@@ -89,11 +89,13 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-  uint8_t blink=0;
+   uint8_t blink=1000;
    uint32_t timestamp=0;
    uint8_t s1[2]=0;
+   uint8_t n=0;
+   uint8_t state=0;
     enum{
-  	time1 = 500,time2 =1000
+  	f05 =1000,f1=500,f2=250,f3=1000/6,
     };
   /* USER CODE END 2 */
 
@@ -104,12 +106,14 @@ int main(void)
 	  s1[1]=HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_10);
 	  if (s1[1]== GPIO_PIN_RESET && s1[0]==GPIO_PIN_SET)
 	  	  {
-	  		if(blink==time1)
-	  		{
-	  			blink=time2;
-	  		}
-	  		else{
-	  			blink=time1;
+	  		switch(state){
+	  		case 0:
+	  			blink=1000;
+	  		break;
+
+	  		default:
+	  			break;
+
 	  		}
 	  	  }
 
