@@ -90,13 +90,16 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
    uint32_t blink=1000;
+   uint32_t led=0;
    uint32_t timestamp=0;
    uint8_t s[2]={0};
    uint8_t s1[2]={0};
+   uint8_t s2[2]={0};
    uint8_t n=0;
+   uint8_t c=0;
    uint32_t timesampling=0;
     enum{
-  	f05 =1000,f1=500,f2=250,f3=1000/6,samplingtime=100
+  	f05 =1000,f1=500,f2=250,f3=1000/6,samplingtime=100,t05=1000,t15=1000/3
     };
   /* USER CODE END 2 */
 
@@ -107,7 +110,7 @@ int main(void)
 	  if(HAL_GetTick()-timesampling>=samplingtime){
 		  timesampling=HAL_GetTick();
 
-	  s[1]=HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_10);
+	  s[0]=HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_10);
 
 
 	  if (s[1]== GPIO_PIN_RESET && s[0]==GPIO_PIN_SET)
@@ -129,7 +132,7 @@ int main(void)
 			  blink=f05;
 		  }
 	  	  }
-	  	  s[0]=s[1];
+	  	  s[1]=s[0];
 	  	  if (HAL_GetTick()-timestamp>=blink)
 	  	  {
 	  		  timestamp=HAL_GetTick();
@@ -156,6 +159,42 @@ int main(void)
 	  		}
 	  	}
 	  	s1[0]=s1[1];
+
+
+	   	s2[1]=HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5);
+		 if (s2[1]== GPIO_PIN_RESET && s2[0]==GPIO_PIN_SET)
+		  	{
+			 c=c+1;
+			 if (c%2==0){
+			 	 switch(led)
+			 	{
+			 	 case (t05):
+			 		led = t05;
+			 	 	 if (HAL_GetTick()-timestamp>=led)
+			 		{
+			 		  timestamp=HAL_GetTick();
+			 		  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_SET);
+			 		  led = t15;
+			 		 }
+			 	 break;
+			 	 case(t15):
+			 	led =t15;
+			 	 if (HAL_GetTick()-timestamp>=led)
+			 	 {
+			 		timestamp=HAL_GetTick();
+			 		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);
+			 		led = t05;
+			 	 }
+			 	 break;
+			 	}
+
+			 }
+			 else{
+			 	  break;
+
+		  	}
+		  	s2[0]=s2[1];
+
 
 
 

@@ -421,12 +421,12 @@ int main(void)
  8000516:	f000 fb03 	bl	8000b20 <HAL_GetTick>
  800051a:	60b8      	str	r0, [r7, #8]
 
-	  s[1]=HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_10);
+	  s[0]=HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_10);
  800051c:	f44f 6180 	mov.w	r1, #1024	; 0x400
  8000520:	4837      	ldr	r0, [pc, #220]	; (8000600 <main+0x128>)
  8000522:	f000 fd71 	bl	8001008 <HAL_GPIO_ReadPin>
  8000526:	4603      	mov	r3, r0
- 8000528:	717b      	strb	r3, [r7, #5]
+ 8000528:	713b      	strb	r3, [r7, #4]
 
 
 	  if (s[1]== GPIO_PIN_RESET && s[0]==GPIO_PIN_SET)
@@ -480,9 +480,9 @@ int main(void)
  8000572:	617b      	str	r3, [r7, #20]
 		  }
 	  	  }
-	  	  s[0]=s[1];
- 8000574:	797b      	ldrb	r3, [r7, #5]
- 8000576:	713b      	strb	r3, [r7, #4]
+	  	  s[1]=s[0];
+ 8000574:	793b      	ldrb	r3, [r7, #4]
+ 8000576:	717b      	strb	r3, [r7, #5]
 	  	  if (HAL_GetTick()-timestamp>=blink)
  8000578:	f000 fad2 	bl	8000b20 <HAL_GetTick>
  800057c:	4602      	mov	r2, r0
