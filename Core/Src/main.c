@@ -90,17 +90,18 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
    uint32_t blink=1000;
-   uint32_t led=0;
+   uint32_t led=1500;
    uint32_t timestamp=0;
+   uint32_t timestamp2=0;
    uint8_t s[2]={0};
    uint8_t s1[2]={0};
    uint8_t s2[2]={0};
-   uint8_t n=0;
-   uint8_t c=0;
+   uint8_t n=1;
+   uint8_t c=1;
+   uint8_t state=0;
    uint32_t timesampling=0;
-    enum{
-  	f05 =1000,f1=500,f2=250,f3=1000/6,samplingtime=100,t05=1000,t15=1000/3
-    };
+   uint32_t timesampling2=0;
+    enum{f05 =1000,f1=500,f2=250,f3=1000/6,samplingtime=100,first,second,on05,off05,on15,off15};
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -148,6 +149,7 @@ int main(void)
 
 
 	  	s1[1]=HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_3);
+	  	//HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, GPIO_PIN_RESET);
 	  	 if (s1[1]== GPIO_PIN_RESET && s1[0]==GPIO_PIN_SET)
 	  	{
 	  		 n=n+1;
@@ -161,41 +163,94 @@ int main(void)
 	  	s1[0]=s1[1];
 
 
+
 	   	s2[1]=HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5);
-		 if (s2[1]== GPIO_PIN_RESET && s2[0]==GPIO_PIN_SET)
-		  	{
-			 c=c+1;
-			 if (c%2==0){
-			 	 switch(led)
-			 	{
-			 	 case (t05):
-			 		led = t05;
-			 	 	 if (HAL_GetTick()-timestamp>=led)
-			 		{
-			 		  timestamp=HAL_GetTick();
-			 		  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_SET);
-			 		  led = t15;
-			 		 }
-			 	 break;
-			 	 case(t15):
-			 	led =t15;
-			 	 if (HAL_GetTick()-timestamp>=led)
-			 	 {
-			 		timestamp=HAL_GetTick();
-			 		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);
-			 		led = t05;
-			 	 }
-			 	 break;
-			 	}
+	   	if (s2[1]== GPIO_PIN_RESET && s2[0]==GPIO_PIN_SET)
+	   	{c =c+1;
+	   	if(c%2==0){
+	   		led = first;}
+	   	else {
+	   		led = second;}
+	   	}
+	   	s2[0]=s2[1];
+	   	switch(led){
+	   	case first:
+	   		switch(state){
+	   		case on05:
+	   			if (HAL_GetTick()-timestamp2>=500  )
+	   			{timestamp2=HAL_GetTick();
+	   			state = off15;
+	   			}
+	   			else{
+	   				HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);
+	   			}
 
-			 }
-			 else{
-			 	  break;
+	   		break;
 
-		  	}
-		  	s2[0]=s2[1];
+	   		case off15:
+	   			if (HAL_GetTick()-timestamp2>=1500  )
+	   			{timestamp2=HAL_GetTick();
+	   			state = on05;}
+	   			else{
+	   			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_SET);
+	   			}
+
+	   		break;
+	   		}
+	   	break;
+
+	   	case second:
+	   		switch(state){
+	   		case on15:
+	   			if (HAL_GetTick()-timestamp2>=1500  )
+	   				{timestamp2=HAL_GetTick();
+	   				state = off05;}
+	   			else{HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);}
+
+	   		break;
+	   		case off05:
+	   			if (HAL_GetTick()-timestamp2>=500  )
+	   			{timestamp2=HAL_GetTick();
+	   			state = on15;}
+	   			else{
+	   			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_SET);
+	   			}
+
+	   		break;
+
+	   		}
+	   	break;
+	   	}
 
 
+
+
+
+//	   	if (s2[1]== GPIO_PIN_RESET && s2[0]==GPIO_PIN_SET)
+//		  	{
+//			 c =c+1;
+//			 if(c%2==0){
+//				 if (HAL_GetTick()-timestamp2>=500 && HAL_GetTick()-timestamp2<1500 )
+//				 				{
+//				 	   			timestamp2=HAL_GetTick();
+//				 	 			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_SET);}
+//
+//				 	   	else{
+//				 	   		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);
+//				 	   	}
+//				  }
+//			 else {
+//				 if (HAL_GetTick()-timestamp2>=t05 && HAL_GetTick()-timestamp2<t15 )
+//				 				{
+//				 	   			timestamp2=HAL_GetTick();
+//				 	 			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);}
+//
+//				 	   	else{
+//				 	   		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_SET);
+//				 	   	}
+//			 }
+//		  	}
+		 s2[0]=s2[1];
 
 
     /* USER CODE END WHILE */
