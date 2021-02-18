@@ -89,8 +89,7 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-   uint32_t blink=
-		   0;
+   uint32_t blink=0;
    uint32_t led=0;
    uint32_t timestamp=0;
    uint32_t timestamp2=0;
@@ -116,8 +115,8 @@ int main(void)
 
 	  if (s[1]== GPIO_PIN_RESET && s[0]==GPIO_PIN_SET)
 	  	  {
-if(blink==0){
-	blink=f05;
+		  if(blink==0){
+			  blink=f05;
 }
 	  else if(blink==f05){
 			  blink=f1;
